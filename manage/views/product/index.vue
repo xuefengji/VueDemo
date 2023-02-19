@@ -1,10 +1,10 @@
 <template>
-  <div>我是Home页面</div>
+  <div>我是Product页面</div>
 </template>
 
 <script>
 export default {
-  name: 'HomeIndex',
+  name: 'UserPage',
   data () {
     return {
 
