@@ -32,8 +32,8 @@
       </div>
       <el-card style="height: 280px"></el-card>
       <div class="graph">
-        <el-card></el-card>
-        <el-card></el-card>
+        <el-card style="height: 260px"></el-card>
+        <el-card style="height: 260px"></el-card>
       </div>
     </el-col>
   </el-row>
@@ -128,6 +128,15 @@ export default {
         }
       ]
     }
+  },
+  mounted() {
+    this.$http.get('/user?ID=12345')
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
   }
 }
 </script>
