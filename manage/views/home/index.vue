@@ -1,6 +1,6 @@
 <template>
-  <el-row class="home" :gutter="20">
-    <el-col span="8" style="margin-top: 20px">
+  <el-row class="home" :gutter=20>
+    <el-col span=8 style="margin-top: 20px">
       <el-card shadow="hover">
         <div class="user">
           <img :src="userImage" />
@@ -20,7 +20,7 @@
         </el-table>
       </el-card>
     </el-col>
-    <el-col span="16" style="padding-top: 20px">
+    <el-col span=16 style="padding-top: 20px">
       <div class="num">
         <el-card v-for="(item, index) in countData" :key="index" :body-style="{display: 'flex', padding: 0}">
           <i class="icon" :class="`el-icon-${item.icon}`" :style="{background: item.color}"></i>
@@ -30,9 +30,13 @@
           </div>
         </el-card>
       </div>
-      <el-card style="height: 280px"></el-card>
+      <el-card style="height: 280px">
+        <div style="height: 280px" ref="echarts"></div>
+      </el-card>
       <div class="graph">
-        <el-card style="height: 260px"></el-card>
+        <el-card style="height: 260px">
+          <div style="height: 260px" ref="userEcharts"></div>
+        </el-card>
         <el-card style="height: 260px"></el-card>
       </div>
     </el-col>
@@ -40,51 +44,15 @@
 </template>
 
 <script>
-import {getMenu} from "../../api/data";
+import {getData} from "../../api/data"
+import * as echarts from 'echarts'
 
 export default {
   name: 'HomePage',
   data () {
     return {
       userImage: require('@/assets/logo.png'),
-      tableData: [
-        {
-          name: 'oppo',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: 'vivo',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: 'iphone',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: 'mi',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '三星',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        },
-        {
-          name: '1加',
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800
-        }
-      ],
+      tableData: [],
       tableLabel: {
         name: '手机型号',
         todayBuy: '今日购买',
@@ -132,10 +100,89 @@ export default {
     }
   },
   mounted() {
-    getMenu().then(
-        res => {
-          console.log(res)
+    getData().then(res => {
+      const { code, data } = res.data
+      if(code === 20000){
+        this.tableData = data.tableData
+        let orderData = data.orderData
+        let nameArray = Object.keys(orderData.data[0])
+        let series = []
+        nameArray.forEach(key => {
+          series.push({
+            name: key,
+            data: orderData.data.map(item => item[key]),
+            type: 'line'
+          })
+        })
+        // console.log(nameArray)
+        let option = {
+          xAxis: {
+            data: orderData.date
+          },
+          yAxis: {},
+          legend: {
+            data: nameArray
+          },
+          series
         }
+        let E = echarts.init(this.$refs.echarts)
+        E.setOption(option)
+        //柱状图
+        let userOption = {
+          legend: {
+            //图例文字颜色
+            textStyle: {
+              color: "#333"
+            }
+          },
+          grid: {
+            left: "20%"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          xAxis: {
+            type: "category",
+            data: data.userData.map(item => item.date),
+            axisLine: {
+              lineStyle: {
+                color: "#17b3a3"
+              }
+            },
+            axisLabel: {
+              interval: 0,
+              color: "#333"
+            }
+          },
+          yAxis: [
+            {
+              type: "value",
+              axisLine: {
+                lineStyle: {
+                  color: "#17b3a3"
+                }
+              }
+            }
+          ],
+          color: ["#2ec7c9", "#b6a2de"],
+          series: [
+            {
+              name: '新增用户',
+              type: 'bar',
+              data: data.userData.map(item => item.new)
+            },
+            {
+              name: '活跃用户',
+              type: 'bar',
+              data: data.userData.map(item => item.active)
+            },
+          ]
+        }
+        let U = echarts.init(this.$refs.userEcharts)
+        U.setOption(userOption)
+      }
+      console.log(res)
+    }
     )
   }
 }
