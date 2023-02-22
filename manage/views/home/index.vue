@@ -37,7 +37,9 @@
         <el-card style="height: 260px">
           <div style="height: 260px" ref="userEcharts"></div>
         </el-card>
-        <el-card style="height: 260px"></el-card>
+        <el-card style="height: 260px">
+          <div style="height: 240px" ref="videoEcharts"></div>
+        </el-card>
       </div>
     </el-col>
   </el-row>
@@ -115,7 +117,7 @@ export default {
           })
         })
         // console.log(nameArray)
-        let option = {
+        const option = {
           xAxis: {
             data: orderData.date
           },
@@ -125,7 +127,7 @@ export default {
           },
           series
         }
-        let E = echarts.init(this.$refs.echarts)
+        const E = echarts.init(this.$refs.echarts)
         E.setOption(option)
         //柱状图
         let userOption = {
@@ -178,8 +180,31 @@ export default {
             },
           ]
         }
-        let U = echarts.init(this.$refs.userEcharts)
+        const U = echarts.init(this.$refs.userEcharts)
         U.setOption(userOption)
+        const videoOption = {
+          tooltip: {
+            trigger: "item"
+          },
+          color: [
+              "#0f78f4",
+              "#dd536b",
+              "#9462e5",
+              "#a6a6a6",
+              "#elbb22",
+              "#39c362",
+              "#3ed1cf"
+          ],
+          series: [
+            {
+              data: data.videoData,
+              type: "pie"
+            }
+          ]
+        }
+        const V = echarts.init(this.$refs.videoEcharts)
+        V.setOption(videoOption)
+
       }
       console.log(res)
     }
