@@ -26,6 +26,16 @@ const routes = [
         name: 'mall',
         component: () =>import('../views/product')
       },
+      {
+        path: '/page1',
+        name: 'page1',
+        component: () => import('../views/other/pageOne.vue')
+      },
+      {
+        path: '/page2',
+        name: 'page2',
+        component: () => import('../views/other/pageTwo.vue')
+      }
     ]
   },
 ]
