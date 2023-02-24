@@ -8,3 +8,18 @@
       align-items: flex-start;
     }
   }
+
+.el-breadcrumb {
+  color: #fff;
+}
+.el-breadcrumb__inner a, .el-breadcrumb__inner.is-link {
+  font-weight: 500;
+  text-decoration: none;
+  transition: color .2s cubic-bezier(.645,.045,.355,1);
+  color: #fff;
+}
+.el-breadcrumb__item:last-child .el-breadcrumb__inner, .el-breadcrumb__item:last-child .el-breadcrumb__inner a, .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover, .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
+  font-weight: 400;
+  color: #fff;
+  cursor: text;
+}
