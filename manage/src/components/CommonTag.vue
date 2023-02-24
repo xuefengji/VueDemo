@@ -18,8 +18,8 @@
 import { mapState } from 'vuex'
 export default {
   methods:{
-    changeMenu () {
-
+    changeMenu (tag) {
+      this.$router.push({name: tag.name})
     },
     handleClose () {
 
@@ -32,3 +32,15 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+
+.tags {
+  padding: 20px;
+  .el-tag {
+    margin-right: 15px;
+    cursor: pointer;
+  }
+}
+
+</style>
