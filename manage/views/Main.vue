@@ -8,6 +8,7 @@
         <el-header>
           <common-header></common-header>
         </el-header>
+        <CommonTag></CommonTag>
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -18,13 +19,15 @@
 
 <script>
 import CommonAside from "@/components/CommonAside"
-import CommonHeader from "@/components/CommonHeader";
+import CommonHeader from "@/components/CommonHeader"
+import CommonTag from "@/components/CommonTag"
 
 export default {
   name: 'MainIndex',
   components: {
     CommonHeader,
-    CommonAside
+    CommonAside,
+    CommonTag
   },
   data () {
     return {
@@ -41,4 +44,5 @@ export default {
 .el-main {
   padding-top: 0;
 }
+
 </style>
