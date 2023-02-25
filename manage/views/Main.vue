@@ -8,7 +8,7 @@
         <el-header>
           <common-header></common-header>
         </el-header>
-        <CommonTag></CommonTag>
+        <common-tag></common-tag>
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -38,6 +38,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+#main {
+  height: 100%;
+}
+
 .el-header {
   background-color: #333;
 }
