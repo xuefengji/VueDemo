@@ -7,12 +7,12 @@ import './assets/less/index.less'
 import store from '../store'
 import router from '../router'
 
-// import http from "axios";
+import http from "axios";
 import '../api/mock'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-// Vue.prototype.$http = http
+Vue.prototype.$http = http
 
 new Vue({
   store,
