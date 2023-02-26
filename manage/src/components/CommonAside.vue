@@ -11,7 +11,7 @@
         <span slot="title">{{item.label}}</span>
       </template>
       <el-menu-item-group  v-for="(subItem, subIndex) in item.children" :key="subItem.path">
-        <el-menu-item @click="clickMenu(subItem)" :index="subIndex">{{subItem.label}}</el-menu-item>
+        <el-menu-item @click="clickMenu(subItem)" :index="subIndex + ''">{{subItem.label}}</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
   </el-menu>
@@ -44,6 +44,7 @@ export default {
           url: 'UserManage/UserManage'
         },
         {
+          path: '/others',  // 仅作为 index 时用
           label: '其他',
           icon: 'location',
           children: [
