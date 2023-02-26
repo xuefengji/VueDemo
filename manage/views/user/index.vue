@@ -100,9 +100,16 @@ export default {
   methods: {
     confirm() {
       if (this.operateType === 'edit') {
-        this.isShow = false
         this.$http.post('/user/edit', this.opreateForm).then(res => {
           console.log(res)
+          this.isShow = false
+
+
+        })
+      } else {
+        this.$http.post('/user/add', this.opreateForm).then(res => {
+          console.log(res)
+          this.isShow = false
 
         })
       }
