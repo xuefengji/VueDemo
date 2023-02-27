@@ -1,17 +1,18 @@
 import axios from './axios'
 
 //获取菜单
-export const getMenu = (param) =>{
+export const getMenu = (data) =>{
   return axios.request({
     url: '/permission/getMenu',
     method: 'post',
-    data: param
+    data
   })
 }
 //获取首页数据
 export const getData = () => {
   return axios.request({
-    url: '/home/getData'
+    url: '/home/getData',
+    method: 'get'
   })
 }
 
@@ -24,10 +25,19 @@ export const addUser = (param) => {
   })
 }
 //编辑用户
-export const editUser = (param) => {
+export const editUser = (data) => {
   return axios.request({
     url: '/user/edit',
     method: 'post',
-    data: param
+    data
+  })
+}
+
+//获取用户
+export const getUserList = (params) => {
+  return axios.request({
+    url: 'user/getUser',
+    method: 'get',
+    params
   })
 }

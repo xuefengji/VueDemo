@@ -16,7 +16,7 @@
       </div>
     </el-dialog>
     <div class="manage-header">
-      <el-button type="primary" @click="addUser">+ 新增</el-button>
+      <el-button type="primary" @click="add">+ 新增</el-button>
       <common-form
           :formLabel="formLabel"
           :form="searchForm"
@@ -26,20 +26,59 @@
         <el-button type="primary" @click="getList">搜索</el-button>
       </common-form>
     </div>
+    <common-table
+        :table-data="tableData"
+        :table-label="tableLabel"
+        :config="config"
+        @changePage="getList()"
+        @edit="userEdit()"
+        @del="delUser()"
+    ></common-table>
   </div>
 </template>
 
 <script>
 import CommonForm from "@/components/CommonForm.vue";
-import {addUser, editUser } from "../../api/data";
+import CommonTable from "@/components/CommonTable";
+import {addUser, editUser, getUserList } from "../../api/data";
 
 export default {
   name: 'UserPage',
   components:{
-    CommonForm
+    CommonForm,
+    CommonTable
   },
   data () {
     return {
+      config: {
+        page: 1,
+        total: 30
+      },
+      tableData: [],
+      tableLabel: [
+        {
+          prop: "name",
+          label: "姓名"
+        },
+        {
+          prop: "age",
+          label: "年龄"
+        },
+        {
+          prop: "sex",
+          label: "性别"
+        },
+        {
+          prop: "birth",
+          label: "出生日期",
+          width: 200
+        },
+        {
+          prop: "addr",
+          label: "地址",
+          width: 320
+        },
+      ],
       operateType: 'add',
       isShow: false,
       opreateFormLabel: [
@@ -98,7 +137,32 @@ export default {
       }
     }
   },
+  created() {
+    this.getList()
+  },
   methods: {
+    getList (name = '') {
+      this.config.loading = true
+      name ? (this.config.page = 1) : ''
+      getUserList({
+        page: this.config.page,
+        name
+      }).then(res => {
+        this.tableData = res.list.map(item => {
+          item.sexLabel = item.sex === 0 ? '女' : '男'
+          return item
+        })
+        this.config.total = res.count
+        this.config.loading = false
+      })
+
+    },
+    delUser () {
+
+    },
+    userEdit () {
+
+    },
     confirm() {
       if (this.operateType === 'edit') {
         // this.$http.post('/user/edit', this.opreateForm).then(res => {
@@ -108,6 +172,7 @@ export default {
         editUser(this.opreateForm).then(res => {
           console.log(res)
           this.isShow = false
+          this.getList()
         })
       } else {
         // this.$http.post('/user/add', this.opreateForm).then(res => {
@@ -118,10 +183,11 @@ export default {
         addUser(this.opreateForm).then(res => {
           console.log(res)
           this.isShow = false
+          this.getList()
         })
       }
   },
-    addUser(){
+    add(){
       this.isShow = true
       this.operateType = 'add'
       this.opreateForm = {
@@ -132,9 +198,6 @@ export default {
         sex: ''
       }
     },
-    getList () {
-
-    }
 }
 }
 </script>

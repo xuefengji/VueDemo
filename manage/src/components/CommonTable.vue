@@ -42,14 +42,14 @@ export default {
     }
   },
   methods: {
-    handleEdit () {
-
+    handleEdit (row) {
+      this.$emit('edit', row)
     },
-    handleDelete () {
-
+    handleDelete (row) {
+      this.$emit('del', row)
     },
-    changePage () {
-
+    changePage (page) {
+      this.$emit('changePage', page)
     }
   }
 }
