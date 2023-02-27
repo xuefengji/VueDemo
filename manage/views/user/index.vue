@@ -31,6 +31,7 @@
 
 <script>
 import CommonForm from "@/components/CommonForm.vue";
+import {addUser, editUser } from "../../api/data";
 
 export default {
   name: 'UserPage',
@@ -100,17 +101,23 @@ export default {
   methods: {
     confirm() {
       if (this.operateType === 'edit') {
-        this.$http.post('/user/edit', this.opreateForm).then(res => {
+        // this.$http.post('/user/edit', this.opreateForm).then(res => {
+        //   console.log(res)
+        //   this.isShow = false
+        // })
+        editUser(this.opreateForm).then(res => {
           console.log(res)
           this.isShow = false
-
-
         })
       } else {
-        this.$http.post('/user/add', this.opreateForm).then(res => {
+        // this.$http.post('/user/add', this.opreateForm).then(res => {
+        //   console.log(res)
+        //   this.isShow = false
+        //
+        // })
+        addUser(this.opreateForm).then(res => {
           console.log(res)
           this.isShow = false
-
         })
       }
   },
