@@ -34,10 +34,12 @@ export const editUser = (data) => {
 }
 
 //获取用户
-export const getUserList = (params) => {
+export const getUserList = (param) => {
   return axios.request({
-    url: 'user/getUser',
+    url: '/user/getUser',
     method: 'get',
-    params
+    param
   })
 }
+
+//删除用户

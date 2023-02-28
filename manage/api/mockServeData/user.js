@@ -38,7 +38,7 @@ export default{
    @return {{code:number,count:number,data:*[]}}
    */
   getUserList: config => {
-    console.log(name)
+    console.log(config.name)
     const { name, page = 1, limit = 20 } = param2Obj(config.url)
     console.log('name:' + name, 'page:' + page, '分页大小limit:' + limit)
     const mockList = List.filter(user => {

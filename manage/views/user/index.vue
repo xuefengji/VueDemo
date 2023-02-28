@@ -52,7 +52,8 @@ export default {
     return {
       config: {
         page: 1,
-        total: 30
+        total: 30,
+        loading: false
       },
       tableData: [],
       tableLabel: [
@@ -147,7 +148,7 @@ export default {
       getUserList({
         page: this.config.page,
         name
-      }).then(res => {
+      }).then(({data : res}) => {
         this.tableData = res.list.map(item => {
           item.sexLabel = item.sex === 0 ? '女' : '男'
           return item
@@ -157,11 +158,28 @@ export default {
       })
 
     },
-    delUser () {
-
+    delUser (row) {
+      this.$confirm("此操作将永久删除该用户，是否继续", "提示", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        const id = row.id()
+        this.$http.post("user/del", {
+          params: { id }
+        }).then(() => {
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          })
+        })
+        this.getList()
+      })
     },
-    userEdit () {
-
+    userEdit (row) {
+      this.operateType = 'edit'
+      this.isShow = true
+      this.opreateForm = row
     },
     confirm() {
       if (this.operateType === 'edit') {
