@@ -20,8 +20,8 @@
     <el-pagination
       class="pager"
       layout="prev, pager, next"
-      :total="config.total"
-      :current-page.sync="config.page"
+      :total="configPage.total"
+      :current-page.sync="configPage.page"
       @current-change="changePage"
       :page-size="20"
     ></el-pagination>
@@ -38,7 +38,7 @@ export default {
   },
   data () {
     return {
-
+      configPage: this.config
     }
   },
   methods: {
