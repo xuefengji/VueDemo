@@ -1,6 +1,6 @@
 <template>
   <el-row class="home" :gutter=20>
-    <el-col span=8 style="margin-top: 20px">
+    <el-col :span=8 style="margin-top: 20px">
       <el-card shadow="hover">
         <div class="user">
           <img :src="userImage" />
@@ -20,7 +20,7 @@
         </el-table>
       </el-card>
     </el-col>
-    <el-col span=16 style="padding-top: 20px">
+    <el-col :span='16' style="padding-top: 20px">
       <div class="num">
         <el-card v-for="(item, index) in countData" :key="index" :body-style="{display: 'flex', padding: 0}">
           <i class="icon" :class="`el-icon-${item.icon}`" :style="{background: item.color}"></i>
