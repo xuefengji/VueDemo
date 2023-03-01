@@ -23,7 +23,7 @@
           :inline="true"
           ref="form"
       >
-        <el-button type="primary" @click="getList">搜索</el-button>
+        <el-button type="primary" @click="getList(searchForm.keyword)">搜索</el-button>
       </common-form>
     </div>
     <common-table
@@ -31,8 +31,8 @@
         :table-label="tableLabel"
         :config="config"
         @changePage="getList()"
-        @edit="userEdit()"
-        @del="delUser()"
+        @edit="userEdit"
+        @del="delUser"
     ></common-table>
   </div>
 </template>
@@ -109,7 +109,7 @@ export default {
           ]
         },
         {
-          model: 'brith',
+          model: 'birth',
           label: '出生日期',
           type: 'date'
         },
@@ -123,7 +123,7 @@ export default {
         name: '',
         addr: '',
         age: '',
-        brith: '',
+        birth: '',
         sex: ''
       },
       formLabel: [
@@ -148,7 +148,7 @@ export default {
       getUserList({
         page: this.config.page,
         name
-      }).then(({data : res}) => {
+      }).then(({data: res}) => {
         this.tableData = res.list.map(item => {
           item.sexLabel = item.sex === 0 ? '女' : '男'
           return item
@@ -165,7 +165,7 @@ export default {
         type: "warning"
       }).then(() => {
         const id = row.id()
-        this.$http.post("user/del", {
+        this.$http.post("/user/del", {
           params: { id }
         }).then(() => {
           this.$message({
@@ -177,29 +177,21 @@ export default {
       })
     },
     userEdit (row) {
+      // console.log(row)
       this.operateType = 'edit'
       this.isShow = true
       this.opreateForm = row
+      // console.log(this.opreateForm)
     },
     confirm() {
       if (this.operateType === 'edit') {
-        // this.$http.post('/user/edit', this.opreateForm).then(res => {
-        //   console.log(res)
-        //   this.isShow = false
-        // })
-        editUser(this.opreateForm).then(res => {
-          console.log(res)
+        editUser(this.opreateForm).then(() => {
           this.isShow = false
           this.getList()
         })
       } else {
-        // this.$http.post('/user/add', this.opreateForm).then(res => {
-        //   console.log(res)
-        //   this.isShow = false
-        //
-        // })
-        addUser(this.opreateForm).then(res => {
-          console.log(res)
+        addUser(this.opreateForm).then(() => {
+          // console.log(res)
           this.isShow = false
           this.getList()
         })
@@ -208,6 +200,7 @@ export default {
     add(){
       this.isShow = true
       this.operateType = 'add'
+      console.log(this.opreateForm)
       this.opreateForm = {
         name: '',
         addr: '',
@@ -215,6 +208,7 @@ export default {
         brith: '',
         sex: ''
       }
+      console.log(this.opreateForm)
     },
 }
 }
