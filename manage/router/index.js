@@ -10,6 +10,7 @@ const routes = [
     name: 'Main',
     // component: Home
     component: () => import('../views/Main'),
+    redirect: '/home',
     children: [
       {
         path: '/home',
