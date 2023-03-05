@@ -35,6 +35,7 @@
   </el-form>
 </template>
 <script>
+import Mock from "mockjs";
 export default {
   name: 'LoginPage',
   data () {
@@ -59,7 +60,9 @@ export default {
   },
   methods: {
     login () {
-
+      const token = Mock.random.guid()
+      this.$store.commit('setToken', token)
+      this.$router.push({name: 'home'})
     }
   }
 }

@@ -14,6 +14,17 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.prototype.$http = http
 
+//判断是否登录，如果登录跳转相关页面，否则跳转login
+router.beforeEach((to, from, next) => {
+  store.commit('getToken')
+  const token = store.state.user.token
+  if (!token && to.name !== 'login') {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
+})
+
 new Vue({
   store,
   router,
