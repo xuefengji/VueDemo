@@ -12,31 +12,31 @@ const routes = [
     component: () => import('../views/Main'),
     redirect: '/home',
     children: [
-      {
-        path: '/home',
-        name: 'home',
-        component: () => import('../views/home')
-      },
-      {
-        path: '/user',
-        name: 'user',
-        component: () =>import('../views/user')
-      },
-      {
-        path: '/mall',
-        name: 'mall',
-        component: () =>import('../views/product')
-      },
-      {
-        path: '/page1',
-        name: 'page1',
-        component: () => import('../views/other/pageOne.vue')
-      },
-      {
-        path: '/page2',
-        name: 'page2',
-        component: () => import('../views/other/pageTwo.vue')
-      }
+      // {
+      //   path: '/home',
+      //   name: 'home',
+      //   component: () => import('../views/home')
+      // },
+      // {
+      //   path: '/user',
+      //   name: 'user',
+      //   component: () =>import('../views/user')
+      // },
+      // {
+      //   path: '/mall',
+      //   name: 'mall',
+      //   component: () =>import('../views/product')
+      // },
+      // {
+      //   path: '/page1',
+      //   name: 'page1',
+      //   component: () => import('../views/other/pageOne.vue')
+      // },
+      // {
+      //   path: '/page2',
+      //   name: 'page2',
+      //   component: () => import('../views/other/pageTwo.vue')
+      // }
     ]
   },
   {
