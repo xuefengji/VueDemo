@@ -21,16 +21,17 @@ export default{
               name:'user',
               label:'用户管理',
               icon:'user',
-              url:'User/index'
+              url:'user/index'
             },
             {
               path:'/mall',
               name:'mall',
               label:'商品管理',
               icon:'video-play',
-              url:'mall/index'
+              url:'product/index'
             },
             {
+              path: '/other',
               label:'其他',
               icon:'location',
               children:[
@@ -75,7 +76,7 @@ export default{
               name:'video',
               label:'商品管理',
               icon:'video-play',
-              url:'mall/index'
+              url:'product/index'
             }
           ],
           token:Mock.Random.guid(),

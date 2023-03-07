@@ -56,13 +56,12 @@ export default {
           })
           menuArray.push(...item.children)
         }else{
-          item.component = () =>import(`../views/${item.url}`)
+          item.component = () => import(`../views/${item.url}`)
           menuArray.push(item)
         }
       });
       // 路由动态添加
       menuArray.forEach(item => {
-        console.log(router)
         router.addRoute('Main',item)
       })
     }
