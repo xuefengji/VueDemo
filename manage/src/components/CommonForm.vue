@@ -43,6 +43,16 @@ export default {
     return {
       formData: this.form
     }
-  }
+  },
+  watch: {
+    form: function (newVal) {
+      this.formData = newVal
+    }
+  },
+  // computed: {
+  //    formData () {
+  //      return this.form
+  //    }
+  // }
 }
 </script>

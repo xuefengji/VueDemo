@@ -3,6 +3,7 @@
     <el-dialog
       :title="operateType === 'add' ? '新增用户' : '更新用户'"
       :visible.sync="isShow"
+      @open="onDialogOpen"
     >
       <common-form
         :formLabel="opreateFormLabel"
@@ -176,6 +177,11 @@ export default {
         this.getList()
       })
     },
+    onDialogOpen(){
+      if(this.operateType === 'add'){
+        this.restOpreateForm()
+      }
+    },
     userEdit (row) {
       // console.log(row)
       this.operateType = 'edit'
@@ -197,10 +203,7 @@ export default {
         })
       }
   },
-    add(){
-      this.isShow = true
-      this.operateType = 'add'
-      console.log(this.opreateForm)
+    restOpreateForm(){
       this.opreateForm = {
         name: '',
         addr: '',
@@ -208,7 +211,11 @@ export default {
         brith: '',
         sex: ''
       }
-      console.log(this.opreateForm)
+    },
+    add(){
+      this.isShow = true
+      this.operateType = 'add'
+      // this.restOpreateForm()
     },
 }
 }
