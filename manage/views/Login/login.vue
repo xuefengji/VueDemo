@@ -15,7 +15,7 @@
       <el-input type="input"
                 v-model="form.username"
                 autocomplete="off"
-                placeholder="请的输入账号"
+                placeholder="请输入账号"
       ></el-input>
     </el-form-item>
     <el-form-item label="密码"
@@ -26,7 +26,7 @@
       <el-input type="password"
                 v-model="form.password"
                 autocomplete="off"
-                placeholder="请的输入密码"
+                placeholder="请输入密码"
       ></el-input>
     </el-form-item>
     <el-form-item class="login-submit">
