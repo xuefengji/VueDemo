@@ -9,7 +9,7 @@
         :width="item.width ? item.width : 125"
       >
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row[item.prop] }}</span>
+          <span style="margin-left: 10px">{{ item.prop === 'sex'?scope.row.sexLabel:scope.row[item.prop] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" min-width="180">
