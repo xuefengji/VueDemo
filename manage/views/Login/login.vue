@@ -1,50 +1,75 @@
 <template>
-  <el-form :model="form"
-           status-icon
-           :rules="rules"
-           ref="form"
-           label-width="100px"
-           class="login-container"
-  >
+  <!--改造登录页面，使用form组件 -->
+  <div class="login-container">
     <h3 class="login-title">系统登录</h3>
-    <el-form-item label="用户名"
-                  label-width="80px"
-                  prop="username"
-                  class="username"
-    >
-      <el-input type="input"
-                v-model="form.username"
-                autocomplete="off"
-                placeholder="请输入账号"
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="密码"
-                  label-width="80px"
-                  prop="password"
-                  class="password"
-    >
-      <el-input type="password"
-                v-model="form.password"
-                autocomplete="off"
-                placeholder="请输入密码"
-      ></el-input>
-    </el-form-item>
-    <el-form-item class="login-submit">
+    <common-form :form-label="formLabel" :form="formData" :inline="false">
       <el-button type="primary" @click="login" class="login-submit">登录</el-button>
-    </el-form-item>
-  </el-form>
+    </common-form>
+  </div>
+<!--  <el-form :model="form"-->
+<!--           status-icon-->
+<!--           :rules="rules"-->
+<!--           ref="form"-->
+<!--           label-width="100px"-->
+<!--           class="login-container"-->
+<!--  >-->
+<!--    <h3 class="login-title">系统登录</h3>-->
+<!--    <el-form-item label="用户名"-->
+<!--                  label-width="80px"-->
+<!--                  prop="username"-->
+<!--                  class="username"-->
+<!--    >-->
+<!--      <el-input type="input"-->
+<!--                v-model="form.username"-->
+<!--                autocomplete="off"-->
+<!--                placeholder="请输入账号"-->
+<!--      ></el-input>-->
+<!--    </el-form-item>-->
+<!--    <el-form-item label="密码"-->
+<!--                  label-width="80px"-->
+<!--                  prop="password"-->
+<!--                  class="password"-->
+<!--    >-->
+<!--      <el-input type="password"-->
+<!--                v-model="form.password"-->
+<!--                autocomplete="off"-->
+<!--                placeholder="请输入密码"-->
+<!--      ></el-input>-->
+<!--    </el-form-item>-->
+<!--    <el-form-item class="login-submit">-->
+<!--      <el-button type="primary" @click="login" class="login-submit">登录</el-button>-->
+<!--    </el-form-item>-->
+<!--  </el-form>-->
 </template>
 <script>
 // import Mock from "mockjs";
 import {getMenu} from "../../api/data";
+import CommonForm from "@/components/CommonForm";
 
 export default {
   name: 'LoginPage',
+  components: {
+    CommonForm
+  },
   data () {
     return {
-      form: {
-
+      formData: {
+        username: '',
+        password: ''
       },
+      formLabel: [
+        {
+          model: 'username',
+          label: '账号',
+          type: 'input'
+        },
+        {
+          model: 'password',
+          label: '密码',
+          type: 'password'
+        }
+
+      ],
       rules: {
         username: [
           {required: true, message:"请输入用户名", trigger: "blur"},
@@ -62,7 +87,7 @@ export default {
   },
   methods: {
     login () {
-      getMenu(this.form).then( ({data: res}) => {
+      getMenu(this.formData).then( ({data: res}) => {
         console.log(res)
         if (res.code === 20000) {
           this.$store.commit('clearMenu')
