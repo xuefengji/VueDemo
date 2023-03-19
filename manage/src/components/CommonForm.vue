@@ -1,8 +1,13 @@
 <template>
-  <el-form ref="form" label-width="100px" :model="formData" :inline="inline">
+  <el-form ref="form"
+           label-width="100px"
+           :model="formData"
+           :rules="rules"
+           status-icon
+           :inline="inline">
     <el-form-item v-for="item in formLabel" :key="item.label" :label="item.label">
       <el-input
-        v-if="item.type === 'input'"
+        v-if="item.type === 'input'||item.type === 'password'"
         :placeholder="'请输入'+item.label"
         v-model="formData[item.model]"
       ></el-input>
@@ -41,7 +46,10 @@ export default {
   },
   data () {
     return {
-      formData: this.form
+      formData: this.form,
+      rules: [
+
+      ]
     }
   },
   watch: {
