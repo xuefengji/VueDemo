@@ -5,7 +5,7 @@
            :rules="rules"
            status-icon
            :inline="inline">
-    <el-form-item v-for="item in formLabel" :key="item.label" :label="item.label">
+    <el-form-item v-for="item in formLabel" :key="item.label" :label="item.label" :prop="item.model">
       <el-input
         v-if="item.type === 'input'||item.type === 'password'"
         :placeholder="'请输入'+item.label"
@@ -42,14 +42,13 @@ export default {
   props: {
     formLabel: Array,
     form: Object,
-    inline: Boolean
+    inline: Boolean,
+    rule: Object
   },
   data () {
     return {
       formData: this.form,
-      rules: [
-
-      ]
+      rules: this.rule
     }
   },
   watch: {

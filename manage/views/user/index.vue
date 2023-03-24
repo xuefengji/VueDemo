@@ -22,6 +22,7 @@
           :formLabel="formLabel"
           :form="searchForm"
           :inline="true"
+          :rule="rules"
           ref="form"
       >
         <el-button type="primary" @click="getList(searchForm.keyword)">搜索</el-button>
@@ -136,6 +137,9 @@ export default {
       ],
       searchForm: {
         keyword: ''
+      },
+      rules: {
+
       }
     }
   },
