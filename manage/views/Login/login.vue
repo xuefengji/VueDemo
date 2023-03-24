@@ -2,7 +2,7 @@
   <!--改造登录页面，使用form组件 -->
   <div class="login-container">
     <h3 class="login-title">系统登录</h3>
-    <common-form :form-label="formLabel" :form="formData" :inline="false">
+    <common-form :form-label="formLabel" :form="formData" :inline="false" :rule="rules">
       <el-button type="primary" @click="login" class="login-submit">登录</el-button>
     </common-form>
   </div>

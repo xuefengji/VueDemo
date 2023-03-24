@@ -9,6 +9,7 @@
         :formLabel="opreateFormLabel"
         :form="opreateForm"
         :inline="true"
+        :rule="rules"
         ref="form"
       ></common-form>
       <div slot="footer" class="dialog-footer">
@@ -139,6 +140,14 @@ export default {
         keyword: ''
       },
       rules: {
+        name: [
+          {required: true, message:"请输入姓名", trigger: "blur"},
+          {
+            max: 10,
+            message: "最多输入 10 个字符",
+            trigger: "blur"
+          }
+        ]
 
       }
     }
