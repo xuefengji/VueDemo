@@ -48,7 +48,7 @@ export default {
     clickMenu(item) {
       this.$router.push({
         name: item.name
-      }, ()=>{})
+      })
       this.$store.commit("selectList", item)
     }
   },
