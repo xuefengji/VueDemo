@@ -1,11 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 
-const Login = () => import('@/views/Login/Login.vue')
-const Home = () => import('@/views/Home/Home.vue')
-const Sign = () => import('@/views/Sign/Sign.vue')
-const Exception = () => import('@/views/Exception/Exception.vue')
-const Apply = () => import('@/views/Apply/Apply.vue')
-const Check = () => import('@/views/Check/Check.vue')
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -20,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: Home,
+    component: () => import('@/views/Home/Home.vue'),
     meta: {
       menu: true,
       title: '考勤管理',
@@ -34,32 +28,50 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           menu: true,
           title: '在线打卡签到',
-          icon: 'document-copy',
+          icon: 'calendar',
           auth: true
         },
-        component: Sign
+        component: () => import('@/views/Sign/Sign.vue')
       },
       {
         path: 'exception',
         name: 'exception',
-        component: Exception
+        meta: {
+          menu: true,
+          title: '异常考勤查询',
+          icon: 'warning',
+          auth: true
+        },
+        component: () => import('@/views/Exception/Exception.vue')
       },
       {
         path: 'check',
         name: 'check',
-        component: Check
+        meta: {
+          menu: true,
+          title: '我的考勤审批',
+          icon: 'finished',
+          auth: true
+        },
+        component: () => import('@/views/Check/Check.vue')
       },
       {
         path: 'apply',
         name: 'apply',
-        component: Apply
+        meta: {
+          menu: true,
+          title: '添加考勤审批',
+          icon: 'document-add',
+          auth: true
+        },
+        component: () => import('@/views/Apply/Apply.vue')
       },
     ]
   },
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: () => import('@/views/Login/Login.vue')
   }
 ]
 
