@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "noImplicitAny": false,   //简单解决引入国际化提示找不到文件
     "target": "esnext",
     "module": "esnext",
     "strict": true,
@@ -13,7 +14,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "element-plus/global"
     ],
     "paths": {
       "@/*": [
