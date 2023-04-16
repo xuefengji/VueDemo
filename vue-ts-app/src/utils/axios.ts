@@ -61,3 +61,5 @@ const http: HTTP = {
         })
     },
 }
+
+export default http;
