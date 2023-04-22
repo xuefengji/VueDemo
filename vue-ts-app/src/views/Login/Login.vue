@@ -43,7 +43,13 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
+import router from "@/router";
+//引入 user store
+import { useStore } from "@/store";
+
+const store = useStore()
 
 const ruleFormRef = ref<FormInstance>()
 
@@ -81,7 +87,15 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      console.log(ruleForm)
+      store.dispatch('users/login', ruleForm).then((res)=>{
+        if (res.data.errcode === 0){
+          store.commit('users/updateToken', res.data.token)
+          ElMessage.success('登录成功')
+          router.push('/')
+        }else {
+          ElMessage.error('登录失败')
+        }
+      })
     } else {
       console.log('error submit!')
       return false
