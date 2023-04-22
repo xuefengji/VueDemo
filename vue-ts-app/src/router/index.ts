@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
-
+import store from '@/store'
+import type { StateAll } from "@/store";
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -78,6 +79,25 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+//增加路由拦截
+router.beforeEach((to, from, next) => {
+  const token = (store.state as StateAll).users.token
+  if(to.meta.auth){
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  }else {
+    if (token && to.path === '/login') {
+      next('/')
+    } else {
+      next()
+    }
+
+  }
 })
 
 export default router
