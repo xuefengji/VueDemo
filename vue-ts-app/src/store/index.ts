@@ -9,6 +9,7 @@ import type  { ChecksState } from './modules/checks'
 import type  { SignsState } from './modules/signs'
 import type  { NewsState } from './modules/news'
 import type  { InjectionKey } from "vue";
+import VuexPersistence from 'vuex-persist'
 
 export interface State {
 
@@ -20,6 +21,13 @@ export interface StateAll extends State {
   signs: SignsState,
   news: NewsState
 }
+//本地持久化
+const vuexLocal = new VuexPersistence<State>({
+  storage: window.localStorage,
+  //保存想要保存的值
+  reducer: (state) => ({token: (state as StateAll).users.token})
+
+})
 
 export const key: InjectionKey<Store<StateAll>> = Symbol()
 
@@ -41,5 +49,6 @@ export default createStore({
     checks,
     signs,
     news
-  }
+  },
+  plugins: [vuexLocal.plugin]   //Use it as Vue plugin
 })
