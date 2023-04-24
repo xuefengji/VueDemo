@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import store from '@/store'
 import type { StateAll } from "@/store";
+import _ from 'lodash';
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -84,9 +85,13 @@ const router = createRouter({
 //增加路由拦截
 router.beforeEach((to, from, next) => {
   const token = (store.state as StateAll).users.token
-  if(to.meta.auth){
+  const infos = (store.state as StateAll).users.infos
+  if(to.meta.auth && _.isEmpty(infos)){
     if (token) {
-      next()
+      store.dispatch('users/infos').then((res) => {
+        store.commit('users/updateInfos', res.data.infos)
+        next()
+      })
     } else {
       next('/login')
     }

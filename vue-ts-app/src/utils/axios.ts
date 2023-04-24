@@ -3,6 +3,7 @@ import config from "@/config/index";
 import type { AxiosRequestConfig,AxiosResponse } from "axios";
 import store from '@/store'
 import type { StateAll } from "@/store";
+import { ElMessage } from 'element-plus'
 
 const instance = axios.create({
     baseURL: process.env.NODE_ENV === 'development'? config.baseUrl.dev: config.baseUrl.pro,
@@ -25,6 +26,14 @@ instance.interceptors.request.use(function (config) {
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
     // 对响应数据做点什么
+    if (response.data.errmsg === 'token error') {
+        ElMessage.error('token error')
+        store.commit('users/clearToken')
+        //防止message没有弹出，加个定时器
+        setTimeout(() => {
+            window.location.replace('/login')
+        }, 1000)
+    }
     return response;
 }, function (error) {
     // 对响应错误做点什么
