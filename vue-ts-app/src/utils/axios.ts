@@ -1,6 +1,8 @@
 import axios from "axios";
 import config from "@/config/index";
 import type { AxiosRequestConfig,AxiosResponse } from "axios";
+import store from '@/store'
+import type { StateAll } from "@/store";
 
 const instance = axios.create({
     baseURL: process.env.NODE_ENV === 'development'? config.baseUrl.dev: config.baseUrl.pro,
@@ -10,6 +12,9 @@ const instance = axios.create({
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
+    if (config.headers) {
+        config.headers.authorization = (store.state as StateAll).users.token
+    }
     return config;
 }, function (error) {
     // 对请求错误做些什么
