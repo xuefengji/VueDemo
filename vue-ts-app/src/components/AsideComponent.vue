@@ -23,6 +23,7 @@ import _ from 'lodash'
 
 const router = useRouter()
 const  menus = _.cloneDeep(router.options.routes).filter((v) => {
+  v.children = v.children?.filter((v) => v.meta?.menu)
   return v.meta?.menu;
 })
 
