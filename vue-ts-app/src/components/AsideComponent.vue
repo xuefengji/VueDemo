@@ -1,27 +1,31 @@
 <template>
-  <el-menu default-active="1">
-    <el-sub-menu index="1">
+  <el-menu default-active="1" router>
+    <el-sub-menu v-for="item in menus"
+                 :key='item.path'
+                 :index="item.path">
       <template #title>
-        <el-icon><DocumentCopy /></el-icon>
-        <span>考勤管理</span>
+        <el-icon><component :is="item.meta?.icon"></component></el-icon>
+        <span>{{item.meta?.title}}</span>
       </template>
-      <el-menu-item index="1-1">
-        <el-icon><Calendar /></el-icon>
-        <span>在线打卡签到</span>
-      </el-menu-item>
-      <el-menu-item index="1-2">
-        <el-icon><Warning /></el-icon>
-        <span>异常考勤查询</span>
-      </el-menu-item>
-      <el-menu-item index="1-3">
-        <el-icon><DocumentAdd /></el-icon>
-        <span>添加考勤审批</span>
+      <el-menu-item v-for="itemChild in item.children"
+                    :key="item.path + itemChild.path"
+                    :index="item.path + itemChild.path">
+        <el-icon><component :is="itemChild.meta?.icon"></component></el-icon>
+        <span>{{ itemChild.meta?.title }}</span>
       </el-menu-item>
     </el-sub-menu>
   </el-menu>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { useRouter } from 'vue-router'
+import _ from 'lodash'
+
+const router = useRouter()
+const  menus = _.cloneDeep(router.options.routes).filter((v) => {
+  return v.meta?.menu;
+})
+
 
 </script>
 
