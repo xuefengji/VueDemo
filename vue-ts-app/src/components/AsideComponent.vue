@@ -1,5 +1,5 @@
 <template>
-  <el-menu default-active="1" router>
+  <el-menu :default-active="route.fullPath" router>
     <el-sub-menu v-for="item in menus"
                  :key='item.path'
                  :index="item.path">
@@ -18,13 +18,14 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import type { RouteRecordName } from 'vue-router'
 import { useStore } from '@/store'
 import _ from 'lodash'
 
 //动态菜单和权限
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
 const permission = store.state.users.infos.permission;
 
