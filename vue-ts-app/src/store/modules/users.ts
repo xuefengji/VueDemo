@@ -32,7 +32,7 @@ const actions: ActionTree<UsersState, State> = {
         return http.post('/users/login', payload)
     },
     infos(){
-        return http.get('users/info')
+        return http.get('users/infos')
     }
 }
 const getters: GetterTree<UsersState, State> = {}
