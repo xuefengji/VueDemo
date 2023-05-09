@@ -19,12 +19,18 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
+import type { RouteRecordName } from 'vue-router'
+import { useStore } from '@/store'
 import _ from 'lodash'
 
-const router = useRouter()
-const  menus = _.cloneDeep(router.options.routes).filter((v) => {
-  v.children = v.children?.filter((v) => v.meta?.menu)
-  return v.meta?.menu;
+//动态菜单和权限
+const router = useRouter();
+const store = useStore();
+const permission = store.state.users.infos.permission;
+
+const menus = _.cloneDeep(router.options.routes).filter((v) => {
+  v.children = v.children?.filter((v) => v.meta?.menu && (permission as (RouteRecordName | undefined)[] ).includes(v.name))
+  return v.meta?.menu && (permission as (RouteRecordName | undefined)[] ).includes(v.name);
 })
 
 
