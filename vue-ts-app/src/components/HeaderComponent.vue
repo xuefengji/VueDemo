@@ -19,21 +19,32 @@
     <el-dropdown>
       <el-space  class="home-header-badge">
         <el-avatar
-            src="http://api.h5ke.top/uploads/62632f3f674b1e20c841aae2.png"
-        />黄蓉
+            :src="head"
+        />{{ name }}
       </el-space>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item @click="handleLogOut">退出</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { computed } from "vue";
+import { useStore } from '@/store'
 
+const store = useStore();
+const head = computed(() => store.state.users.infos.head)
+const name = computed(() => store.state.users.infos.name)
+const handleLogOut = () => {
+  store.commit('users/clearToken')
+  setTimeout(() => {
+    window.location.replace('/login')
+  }, 500)
+}
 </script>
 
 <style lang="scss" scoped>
