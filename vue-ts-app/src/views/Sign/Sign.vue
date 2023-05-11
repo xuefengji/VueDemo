@@ -1,6 +1,6 @@
 <template>
   <el-descriptions border direction="vertical" column="9">
-    <el-descriptions-item label="月份">10月</el-descriptions-item>
+    <el-descriptions-item label="月份">{{month}}月</el-descriptions-item>
     <el-descriptions-item label="考勤管理">0</el-descriptions-item>
     <el-descriptions-item label="Telephone">0</el-descriptions-item>
     <el-descriptions-item label="Telephone">0</el-descriptions-item>
@@ -18,9 +18,9 @@
     <template #header>
       <el-button type="primary" plain>在线签到</el-button>
       <el-space>
-        <el-button plain>2022年</el-button>
-        <el-select>
-          <el-option v-for="item in 12" :key="item" value="item">{{item}}月</el-option>
+        <el-button plain>{{year}}</el-button>
+        <el-select v-model="month">
+          <el-option v-for="item in 12" :key="item" :value="item" :label="item + '月'" />
         </el-select>
       </el-space>
     </template>
@@ -31,6 +31,8 @@
 import {ref} from "vue";
 
 const  date = ref(new Date())
+const year = date.value.getFullYear()
+const month = ref(date.value.getMonth() + 1)
 
 </script>
 
