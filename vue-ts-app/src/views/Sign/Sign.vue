@@ -14,12 +14,31 @@
       <el-tag type="danger" size="small">异常</el-tag>
     </el-descriptions-item>
   </el-descriptions>
+  <el-calendar v-model="date" >
+    <template #header>
+      <el-button type="primary" plain>在线签到</el-button>
+      <el-space>
+        <el-button plain>2022年</el-button>
+        <el-select>
+          <el-option v-for="item in 12" :key="item" value="item">{{item}}月</el-option>
+        </el-select>
+      </el-space>
+    </template>
+  </el-calendar>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {ref} from "vue";
+
+const  date = ref(new Date())
+
+</script>
 
 <style scoped lang="scss">
 .el-descriptions {
   margin: 10px;
+}
+.el-select {
+  width: 90px;
 }
 </style>
