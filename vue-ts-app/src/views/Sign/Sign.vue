@@ -1,7 +1,7 @@
 <template>
-  <el-descriptions border direction="vertical" column="9">
+  <el-descriptions border direction="vertical" column=9>
     <el-descriptions-item label="月份">{{month}}月</el-descriptions-item>
-    <el-descriptions-item v-for="value, key in DailyKey"
+    <el-descriptions-item v-for="(value, key) in DailyKey"
                           :key="key"
                           :label="value">
       {{detailValue[key]}}
@@ -13,12 +13,12 @@
       <el-tag type="danger" size="small">异常</el-tag>
     </el-descriptions-item>
   </el-descriptions>
-  <el-calendar v-model="date" @change="handleChange">
+  <el-calendar v-model="date">
     <template #header>
       <el-button type="primary" plain>在线签到</el-button>
       <el-space>
         <el-button plain>{{year}}年</el-button>
-        <el-select v-model="month">
+        <el-select v-model="month"  @change="handleChange">
           <el-option v-for="item in 12" :key="item" :value="item" :label="item + '月'" />
         </el-select>
       </el-space>
@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import {ref, reactive} from "vue";
 
-const  date = ref(new Date())
+const date = ref(new Date())
 const year = date.value.getFullYear()
 const month = ref(date.value.getMonth() + 1)
 enum DailyKey {
