@@ -6,11 +6,11 @@
                           :label="value">
       {{detailValue[key]}}
     </el-descriptions-item>
-    <el-descriptions-item label="Telephone">
-      <el-button type="primary" size="small" plain>查看详情</el-button>
+    <el-descriptions-item label="操作">
+      <el-button type="primary" size="small" plain @click="handleToException">查看详情</el-button>
     </el-descriptions-item>
-    <el-descriptions-item label="Telephone">
-      <el-tag type="danger" size="small">异常</el-tag>
+    <el-descriptions-item label="考勤状态">
+      <el-tag :type="detailState.type" size="small">{{ detailState.text }}</el-tag>
     </el-descriptions-item>
   </el-descriptions>
   <el-calendar v-model="date">
@@ -28,7 +28,9 @@
 
 <script setup lang="ts">
 import {ref, reactive} from "vue";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 const date = ref(new Date())
 const year = date.value.getFullYear()
 const month = ref(date.value.getMonth() + 1)
@@ -49,9 +51,18 @@ const detailValue = reactive({
   early: 0,
   lateAndEarly: 0,
 })
+//异常|正常值变量
+const detailState = reactive({
+  type: 'success' as 'success' | 'danger',
+  text: '正常' as '正常' | '异常'
+})
 const handleChange = () => {
   date.value = new Date(`${year}.${month.value}`)
 }
+const handleToException = () => {
+  router.push('/exception')
+}
+
 </script>
 
 <style scoped lang="scss">
