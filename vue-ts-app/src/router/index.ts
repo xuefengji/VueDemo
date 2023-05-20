@@ -33,7 +33,24 @@ const routes: Array<RouteRecordRaw> = [
           icon: 'calendar',
           auth: true
         },
-        component: () => import('@/views/Sign/Sign.vue')
+        component: () => import('@/views/Sign/Sign.vue'),
+        //进入页面前获取相关考勤信息
+        beforeEnter (to, from, next){
+          const usersInfos = (store.state as StateAll).users.infos
+          const signInfos = (store.state as StateAll).signs.infos
+          if (_.isEmpty(signInfos)) {
+            store.dispatch('signs/getTime', {userid: usersInfos._id}).then((res) => {
+              if (res.data.errcode === 0){
+                store.commit('signs/updateInfos', res.data.infos)
+                next()
+              }
+            })
+          }
+          else {
+            next()
+          }
+
+        }
       },
       {
         path: 'exception',
