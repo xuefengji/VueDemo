@@ -15,7 +15,7 @@
   </el-descriptions>
   <el-calendar v-model="date">
     <template #header>
-      <el-button type="primary" plain>在线签到</el-button>
+      <el-button type="primary" plain @click="handlePutTime">在线签到</el-button>
       <el-space>
         <el-button plain>{{year}}年</el-button>
         <el-select v-model="month"  @change="handleChange">
@@ -23,14 +23,22 @@
         </el-select>
       </el-space>
     </template>
+    <template #date-cell="{ data }">
+      <div>{{renderDay(data.day)}}</div>
+      <div class="show-time">{{renderTime(data.day)}}</div>
+    </template>
   </el-calendar>
 </template>
 
 <script setup lang="ts">
-import {ref, reactive} from "vue";
+import {ref, reactive, computed} from "vue";
 import {useRouter} from "vue-router";
+import {useStore} from "@/store";
 
 const router = useRouter()
+const store = useStore()
+const signsInfos = computed(()=> store.state.signs.infos)
+const usersInfos = computed(()=> store.state.users.infos)
 const date = ref(new Date())
 const year = date.value.getFullYear()
 const month = ref(date.value.getMonth() + 1)
@@ -63,6 +71,25 @@ const handleToException = () => {
   router.push('/exception')
 }
 
+const renderDay = (day: string) => {
+  return day.split('-')[2]
+}
+const renderTime = (day: string) => {
+  const [, month, date ] = day.split('-');
+  const ret = ((signsInfos.value.time as {[index: string]: unknown})[month] as {[index: string]: unknown})[date];
+  if (Array.isArray(ret)) {
+    return ret.join('-')
+  }
+}
+
+const handlePutTime = () => {
+  store.dispatch('signs/putTime', {userid: usersInfos.value._id}).then((res) => {
+    if (res.data.errcode === 0) {
+      store.commit('signs/updateInfos', res.data.infos)
+    }
+  })
+
+}
 </script>
 
 <style scoped lang="scss">
@@ -71,5 +98,12 @@ const handleToException = () => {
 }
 .el-select {
   width: 90px;
+}
+.show-time {
+  text-align: center;
+  line-height: 40px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>
