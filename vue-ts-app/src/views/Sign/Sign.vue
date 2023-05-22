@@ -31,9 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import {ref, reactive, computed} from "vue";
+import {ref, reactive, computed, watchEffect} from "vue";
 import {useRouter} from "vue-router";
 import {useStore} from "@/store";
+import {ElMessage} from "element-plus";
+import {toZero} from "@/utils/common";
 
 const router = useRouter()
 const store = useStore()
@@ -64,6 +66,47 @@ const detailState = reactive({
   type: 'success' as 'success' | 'danger',
   text: '正常' as '正常' | '异常'
 })
+
+watchEffect((reset)=>{
+  const detailMonth = (signsInfos.value.detail as {[index: string]: unknown})[toZero(month.value)] as {[index: string]: unknown}
+  for (const attr in detailMonth) {
+    switch (detailMonth[attr]) {
+      case DailyKey.normal:
+        detailValue.normal++
+        break
+      case DailyKey.absent:
+        detailValue.absent++
+        break
+      case DailyKey.miss:
+        detailValue.miss++
+        break
+      case DailyKey.late:
+        detailValue.late++
+        break
+      case DailyKey.early:
+        detailValue.early++
+        break
+      case DailyKey.lateAndEarly:
+        detailValue.lateAndEarly++
+        break
+    }
+  }
+  for (const attr in detailValue) {
+    if (attr !== 'normal' && detailValue[attr as keyof typeof detailValue] !== 0 ){
+      detailState.type = 'danger'
+      detailState.text = '异常'
+    }
+  }
+
+  reset(()=>{
+    detailState.type = 'success'
+    detailState.text = '正常'
+    for (const attr in detailValue) {
+      detailValue[attr as keyof typeof detailValue] = 0
+    }
+  })
+})
+
 const handleChange = () => {
   date.value = new Date(`${year}.${month.value}`)
 }
@@ -86,6 +129,7 @@ const handlePutTime = () => {
   store.dispatch('signs/putTime', {userid: usersInfos.value._id}).then((res) => {
     if (res.data.errcode === 0) {
       store.commit('signs/updateInfos', res.data.infos)
+      ElMessage.success('签到成功')
     }
   })
 
