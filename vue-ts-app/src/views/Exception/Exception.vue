@@ -1,6 +1,6 @@
 <template>
   <div class="exception-title">
-    <el-button type="primary">异常处理</el-button>
+    <el-button type="primary" @click="handleToApply">异常处理</el-button>
     <el-space>
       <el-button plain>{{year}}年</el-button>
       <el-select v-model="month">
@@ -12,19 +12,11 @@
     <el-col :span="12">
       <el-empty v-if='false' description="暂无异常考勤"></el-empty>
       <el-timeline v-else>
-        <el-timeline-item timestamp="2023/5/21" placement="top">
+        <el-timeline-item v-for="item in detailData" :key='item[0]' :timestamp="year+'/'+month +'/'+ item[0]" placement="top">
           <el-card>
             <el-space>
-              <h4>旷工</h4>
-              <p>考勤详情：暂无打卡记录</p>
-            </el-space>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2023/5/21" placement="top">
-          <el-card>
-            <el-space>
-              <h4>旷工</h4>
-              <p>考勤详情：暂无打卡记录</p>
+              <h4>{{item[1]}}</h4>
+              <p>考勤详情：{{ renderTime(item[0]) }}</p>
             </el-space>
           </el-card>
         </el-timeline-item>
@@ -53,14 +45,30 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import { useRoute, useRouter } from "vue-router";
+import {useStore} from "@/store";
+import {toZero} from "@/utils/common";
 
+const store = useStore()
+const singInfos = computed(() => store.state.signs.infos)
 const route = useRoute()
 const router = useRouter()
 const date = new Date()
 const year = date.getFullYear()
 const month = ref(Number(route.query.month) ||date.getMonth()+1)
+
+//
+const ret = (singInfos.value.detail as {[index: string]: unknown})[toZero(month.value)] as {[index: string]: unknown}
+const detailData = computed(() => Object.entries(ret).filter((v) => v[1]!== '正常考勤').sort())
+const renderTime = (date: string) => {
+  const ret = ((singInfos.value.time as {[index: string]: unknown})[toZero(month.value)] as {[index: string]: unknown})[date]
+  if (Array.isArray(ret)){
+    return ret.join('-')
+  } else {
+    return '暂无打卡记录'
+  }
+}
 
 watch(month, ()=>{
   router.push({
@@ -68,6 +76,9 @@ watch(month, ()=>{
   })
 })
 
+const handleToApply = () => {
+  router.push('/apply')
+}
 </script>
 
 <style scoped lang="scss">
