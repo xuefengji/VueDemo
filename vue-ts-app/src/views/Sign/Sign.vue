@@ -111,7 +111,10 @@ const handleChange = () => {
   date.value = new Date(`${year}.${month.value}`)
 }
 const handleToException = () => {
-  router.push('/exception')
+  router.push({
+    path: '/exception',
+    query: {month: month.value}
+  })
 }
 
 const renderDay = (day: string) => {
