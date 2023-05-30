@@ -47,12 +47,12 @@
         label-width="120px"
         class="main"
     >
-      <el-form-item label="审批人">
+      <el-form-item label="审批人" prop="approvername">
         <el-select v-model="ruleForm.approvername">
-          <el-option value="洪七公"></el-option>
+          <el-option v-for="item in approvorList" :key="item._id"  :value="item.name"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="审批事由">
+      <el-form-item label="审批事由" prop="reason">
         <el-select v-model="ruleForm.reason">
           <el-option value="年假"></el-option>
           <el-option value="事假"></el-option>
@@ -124,6 +124,9 @@ const handleOpen = () => {
 const dialogVisible = ref(false)
 
 const store = useStore()
+const userInfos = store.state.users.infos
+console.log(userInfos)
+const approvorList = userInfos.approver
 const applyData = computed(() => store.state.checks.applyList.filter((v) => (v.state === approverType.value || approverDefaultType === approverType.value) && (v.note as string).includes(searchText.value)))
 
 const currentPageSize = ref(5)
