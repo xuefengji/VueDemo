@@ -13,10 +13,25 @@
       </el-radio-group>
     </el-space>
   </div>
+  <div class="apply-table">
+    <el-table border :data='applyData' style="width: 100%">
+      <el-table-column prop="applicantname" label="申请人" width="180"> </el-table-column>
+      <el-table-column prop="reason" label="审批事由" width="180"> </el-table-column>
+      <el-table-column prop="time" label="时间" width="180"> </el-table-column>
+      <el-table-column prop="note" label="备注" width="180"> </el-table-column>
+      <el-table-column prop="approvername" label="审批人" width="180"> </el-table-column>
+      <el-table-column prop="state" label="状态"> </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script setup lang="ts">
 import {ref} from 'vue'
+import { useStore } from '@/store'
+
+
+const store = useStore()
+const applyData = store.state.checks.applyList
 
 const approverType = ref('全部')
 </script>
@@ -26,5 +41,8 @@ const approverType = ref('全部')
   margin: 20px;
   display: flex;
   justify-content: space-between;
+}
+.apply-table {
+  margin: 10px;
 }
 </style>

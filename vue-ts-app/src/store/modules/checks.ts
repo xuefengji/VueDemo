@@ -1,13 +1,28 @@
 import type { MutationTree, ActionTree, GetterTree} from "vuex";
 import type { State } from '../index'
+import http from "@/utils/axios";
 
-export interface ChecksState {
-
+interface ApplyList {
+    [index: string] : unknown
 }
 
-const state: ChecksState = {}
-const mutations: MutationTree<ChecksState> = {}
-const actions: ActionTree<ChecksState, State> = {}
+export interface ChecksState {
+    applyList: ApplyList[]
+}
+
+const state: ChecksState = {
+    applyList: []
+}
+const mutations: MutationTree<ChecksState> = {
+    updateApplyList (state, payload) {
+        state.applyList = payload
+    }
+}
+const actions: ActionTree<ChecksState, State> = {
+    getApplyList (content, payload) {
+        return http.get('/checks/apply', payload)
+    }
+}
 const getters: GetterTree<ChecksState, State> = {}
 
 export default {

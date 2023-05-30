@@ -99,7 +99,23 @@ const routes: Array<RouteRecordRaw> = [
           icon: 'document-add',
           auth: true
         },
-        component: () => import('@/views/Apply/Apply.vue')
+        component: () => import('@/views/Apply/Apply.vue'),
+        beforeEnter (to, from, next){
+          const usersInfos = (store.state as StateAll).users.infos
+          const applyList = (store.state as StateAll).checks.applyList
+          if (_.isEmpty(applyList)) {
+            store.dispatch('checks/getApplyList', {applicantid: usersInfos._id}).then((res) => {
+              if (res.data.errcode === 0){
+                store.commit('checks/updateApplyList', res.data.rets)
+                next()
+              }
+            })
+          }
+          else {
+            next()
+          }
+
+        }
       },
     ]
   },
