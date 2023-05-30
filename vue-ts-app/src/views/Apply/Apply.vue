@@ -63,7 +63,7 @@
       </el-form-item>
       <el-form-item label="时间" prop="time">
         <el-date-picker
-            v-model="value1"
+            v-model="ruleForm.time"
             type="datetimerange"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -74,8 +74,8 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button>重置</el-button>
-      <el-button type="primary">提交</el-button>
+      <el-button @click="resetData(ruleFormRef)">重置</el-button>
+      <el-button type="primary" @click="submitForm(ruleFormRef)">提交</el-button>
     </template>
   </el-dialog>
 </template>
@@ -83,24 +83,45 @@
 <script setup lang="ts">
 import {computed, reactive, ref} from 'vue'
 import { useStore } from '@/store'
-import {FormInstance, FormRules} from "element-plus";
+import {DateModelType, ElMessage, FormInstance, FormRules} from "element-plus";
+import router from "@/router";
 
-const value1 = ref('')
+
 const textarea = ref('')
 const ruleFormRef = ref<FormInstance>()
 interface Apply{
+  applicantid: string,
   approvername: string,
+  approverid: string,
   reason: string,
   note: string,
-  time: []
+  time: [DateModelType, DateModelType]
 
 }
 
+const resetData = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      console.log(ruleForm)
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
+}
+
 const ruleForm = reactive<Apply>({
+  applicantid: '',
   approvername: '',
+  approverid: '',
   reason: '',
   note: '',
-  time: []
+  time: ['', '']
 })
 
 const rules = reactive<FormRules>({
@@ -124,9 +145,8 @@ const handleOpen = () => {
 const dialogVisible = ref(false)
 
 const store = useStore()
-const userInfos = store.state.users.infos
-console.log(userInfos)
-const approvorList = userInfos.approver
+const userInfos = computed(()=>store.state.users.infos)
+const approvorList = computed(()=>userInfos.value.approver as {[index: string]: unknown}[])
 const applyData = computed(() => store.state.checks.applyList.filter((v) => (v.state === approverType.value || approverDefaultType === approverType.value) && (v.note as string).includes(searchText.value)))
 
 const currentPageSize = ref(5)
