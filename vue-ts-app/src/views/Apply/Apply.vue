@@ -2,7 +2,7 @@
   <div class="apply-title">
     <el-button type="primary">添加审批</el-button>
     <el-space>
-      <el-input placeholder="请输入搜索关键词"/>
+      <el-input placeholder="请输入搜索关键词" v-model="searchText"/>
       <el-button type="primary" icon="search" >搜索</el-button>
       <el-divider direction="vertical"></el-divider>
       <el-radio-group v-model="approverType">
@@ -43,11 +43,11 @@ import { useStore } from '@/store'
 
 
 const store = useStore()
-const applyData = store.state.checks.applyList
+const applyData = computed(() => store.state.checks.applyList.filter((v) => (v.state === approverType.value || approverDefaultType === approverType.value) && (v.note as string).includes(searchText.value)))
 
 const currentPageSize = ref(5)
 const currentPage = ref(1)
-const applyPageData = computed(()=> applyData.slice((currentPage.value-1) * currentPageSize.value, currentPage.value* currentPageSize.value))
+const applyPageData = computed(()=> applyData.value.slice((currentPage.value-1) * currentPageSize.value, currentPage.value* currentPageSize.value))
 
 const handleSizeChange = (val: number)=>{
   currentPageSize.value = val
@@ -55,8 +55,9 @@ const handleSizeChange = (val: number)=>{
 const handleCurrentChange = (val: number)=>{
   currentPage.value = val
 }
-
-const approverType = ref('全部')
+const approverDefaultType = '全部'
+const approverType = ref(approverDefaultType)
+const searchText = ref('')
 </script>
 
 <style scoped lang="scss">
