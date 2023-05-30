@@ -14,7 +14,7 @@
     </el-space>
   </div>
   <div class="apply-table">
-    <el-table border :data='applyData' style="width: 100%">
+    <el-table border :data='applyPageData' style="width: 100%">
       <el-table-column prop="applicantname" label="申请人" width="180"> </el-table-column>
       <el-table-column prop="reason" label="审批事由" width="180"> </el-table-column>
       <el-table-column prop="time" label="时间" >
@@ -28,9 +28,9 @@
     </el-table>
     <el-pagination @size-change="handleSizeChange"
                    @current-change="handleCurrentChange"
-                   v-model:currentPage="currentPage2"
+                   v-model:currentPage="currentPage"
                    :page-sizes="[5, 10, 20, 30]"
-                   :page-size="5"
+                   :page-size="currentPageSize"
                    layout="sizes, prev, pager, next"
                    :total="applyData.length">
     </el-pagination>
@@ -38,12 +38,23 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 import { useStore } from '@/store'
 
 
 const store = useStore()
 const applyData = store.state.checks.applyList
+
+const currentPageSize = ref(5)
+const currentPage = ref(1)
+const applyPageData = computed(()=> applyData.slice((currentPage.value-1) * currentPageSize.value, currentPage.value* currentPageSize.value))
+
+const handleSizeChange = (val: number)=>{
+  currentPageSize.value = val
+}
+const handleCurrentChange = (val: number)=>{
+  currentPage.value = val
+}
 
 const approverType = ref('全部')
 </script>
