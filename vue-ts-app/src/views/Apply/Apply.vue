@@ -26,6 +26,14 @@
       <el-table-column prop="approvername" label="审批人" width="180"> </el-table-column>
       <el-table-column prop="state" label="状态" width="180"> </el-table-column>
     </el-table>
+    <el-pagination @size-change="handleSizeChange"
+                   @current-change="handleCurrentChange"
+                   v-model:currentPage="currentPage2"
+                   :page-sizes="[5, 10, 20, 30]"
+                   :page-size="5"
+                   layout="sizes, prev, pager, next"
+                   :total="applyData.length">
+    </el-pagination>
   </div>
 </template>
 
@@ -48,5 +56,10 @@ const approverType = ref('全部')
 }
 .apply-table {
   margin: 10px;
+  .el-pagination {
+    margin: 10px;
+    display: flex;
+    float: right;
+  }
 }
 </style>
