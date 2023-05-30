@@ -1,6 +1,6 @@
 <template>
   <div class="apply-title">
-    <el-button type="primary">添加审批</el-button>
+    <el-button type="primary" @click="handleOpen">添加审批</el-button>
     <el-space>
       <el-input placeholder="请输入搜索关键词" v-model="searchText"/>
       <el-button type="primary" icon="search" >搜索</el-button>
@@ -35,12 +35,93 @@
                    :total="applyData.length">
     </el-pagination>
   </div>
+  <el-dialog
+      v-model="dialogVisible"
+      title="添加审批"
+      width="500px"
+  >
+    <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="120px"
+        class="main"
+    >
+      <el-form-item label="审批人">
+        <el-select v-model="ruleForm.approvername">
+          <el-option value="洪七公"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="审批事由">
+        <el-select v-model="ruleForm.reason">
+          <el-option value="年假"></el-option>
+          <el-option value="事假"></el-option>
+          <el-option value="病假"></el-option>
+          <el-option value="外出"></el-option>
+          <el-option value="补签卡"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="时间" prop="time">
+        <el-date-picker
+            v-model="value1"
+            type="datetimerange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+        />
+      </el-form-item>
+      <el-form-item label="备注" prop="note">
+        <el-input v-model="textarea" type="textarea" rows="5"/>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button>重置</el-button>
+      <el-button type="primary">提交</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {computed, reactive, ref} from 'vue'
 import { useStore } from '@/store'
+import {FormInstance, FormRules} from "element-plus";
 
+const value1 = ref('')
+const textarea = ref('')
+const ruleFormRef = ref<FormInstance>()
+interface Apply{
+  approvername: string,
+  reason: string,
+  note: string,
+  time: []
+
+}
+
+const ruleForm = reactive<Apply>({
+  approvername: '',
+  reason: '',
+  note: '',
+  time: []
+})
+
+const rules = reactive<FormRules>({
+  approvername: [
+    { required: true, message: '请选择审批人', trigger: 'blur' },
+  ],
+  reason: [
+    { required: true, message: '请选择审批事由', trigger: 'blur' },
+  ],
+  note: [
+    { required: true, message: '请填写备注', trigger: 'blur'}
+  ],
+  time: [
+    { required: true, message: '请选择时间', trigger: 'blur'}
+  ],
+})
+
+const handleOpen = () => {
+  dialogVisible.value = true
+}
+const dialogVisible = ref(false)
 
 const store = useStore()
 const applyData = computed(() => store.state.checks.applyList.filter((v) => (v.state === approverType.value || approverDefaultType === approverType.value) && (v.note as string).includes(searchText.value)))
