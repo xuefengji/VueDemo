@@ -10,7 +10,7 @@
   </div>
   <el-row :gutter="20">
     <el-col :span="12">
-      <el-empty v-if='false' description="暂无异常考勤"></el-empty>
+      <el-empty v-if='detailData.length === 0' description="暂无异常考勤"></el-empty>
       <el-timeline v-else>
         <el-timeline-item v-for="item in detailData" :key='item[0]' :timestamp="year+'/'+month +'/'+ item[0]" placement="top">
           <el-card>
@@ -23,20 +23,13 @@
       </el-timeline>
     </el-col>
     <el-col :span="12">
-      <el-empty v-if='false' description="暂无申请审批"></el-empty>
+      <el-empty v-if='applyDetailMonth.length ===0' description="暂无申请审批"></el-empty>
       <el-timeline v-else>
-        <el-timeline-item timestamp="事假" placement="top">
+        <el-timeline-item v-for="item in applyDetailMonth" :key="item._id" :timestamp="item.reason" placement="top">
           <el-card>
-            <h4>已通过</h4>
-            <p class="apply-info">申请日期 2023-05-10 12:00:00 - 2023-05-11 12:00:00</p>
-            <p class="apply-info">申请详情 1</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2023/5/21" placement="top">
-          <el-card>
-            <h4>已通过</h4>
-            <p class="apply-info">申请日期 2023-05-10 12:00:00 - 2023-05-11 12:00:00</p>
-            <p class="apply-info">申请详情 1</p>
+            <h4>{{item.state}}</h4>
+            <p class="apply-info">申请日期 {{item.time[0]}} - {{item.time[1]}}</p>
+            <p class="apply-info">申请详情 {{item.note}}</p>
           </el-card>
         </el-timeline-item>
       </el-timeline>
@@ -57,8 +50,13 @@ const router = useRouter()
 const date = new Date()
 const year = date.getFullYear()
 const month = ref(Number(route.query.month) ||date.getMonth()+1)
+const applyDetailMonth = computed(()=>store.state.checks.applyList.filter((v)=>{
+  const startTime = (v.time as string[])[0].split(' ')[0].split('-');
+  const endTime = (v.time as string[])[1].split(' ')[0].split('-');
+  return startTime[1] <= toZero(month.value) && endTime[1] >= toZero(month.value)
+}))
 
-//
+
 const ret = (singInfos.value.detail as {[index: string]: unknown})[toZero(month.value)] as {[index: string]: unknown}
 const detailData = computed(() => Object.entries(ret).filter((v) => v[1]!== '正常考勤').sort())
 const renderTime = (date: string) => {

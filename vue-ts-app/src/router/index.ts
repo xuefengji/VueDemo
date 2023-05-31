@@ -62,21 +62,28 @@ const routes: Array<RouteRecordRaw> = [
           auth: true
         },
         component: () => import('@/views/Exception/Exception.vue'),
-        beforeEnter (to, from, next){
+        async beforeEnter (to, from, next){
           const usersInfos = (store.state as StateAll).users.infos
           const signInfos = (store.state as StateAll).signs.infos
+          const applyList = (store.state as StateAll).checks.applyList
           if (_.isEmpty(signInfos)) {
-            store.dispatch('signs/getTime', {userid: usersInfos._id}).then((res) => {
+            const res = await store.dispatch('signs/getTime', {userid: usersInfos._id})
+            if(res.data.errcode === 0) {
+              store.commit('signs/updateInfos', res.data.infos)
+            }else{
+              return
+            }
+          }
+          if (_.isEmpty(applyList)) {
+            const res = await store.dispatch('checks/getApplyList', {applicantid: usersInfos._id})
               if (res.data.errcode === 0){
-                store.commit('signs/updateInfos', res.data.infos)
+                store.commit('checks/updateApplyList', res.data.rets)
                 next()
+              }else {
+                return
               }
-            })
           }
-          else {
-            next()
-          }
-
+          next()
         }
       },
       {
