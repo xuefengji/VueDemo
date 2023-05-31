@@ -13,7 +13,7 @@
     </el-space>
   </div>
   <div class="check-table">
-    <el-table border :data="checkList" style="width: 100%">
+    <el-table border :data="checkPageData" style="width: 100%">
       <el-table-column prop="applicantname" label="申请人" width="180"> </el-table-column>
       <el-table-column prop="reason" label="审批事由" width="180"> </el-table-column>
       <el-table-column prop="time" label="时间" >
@@ -47,7 +47,8 @@ const approverType = ref(approverDefaultType)
 const currentPageSize = ref(5)
 const currentPage = ref(1)
 
-const checkList = computed(()=>store.state.checks.checkList)
+const checkList = computed(()=>store.state.checks.checkList.filter((v) => (v.state === approverType.value || approverDefaultType === approverType.value) && (v.note as string).includes(searchText.value)))
+const checkPageData = computed(()=> checkList.value.slice((currentPage.value-1) * currentPageSize.value, currentPage.value* currentPageSize.value))
 const handleSizeChange = (val: number)=>{
   currentPageSize.value = val
 }
