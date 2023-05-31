@@ -22,7 +22,12 @@
         </template>
       </el-table-column>
       <el-table-column prop="note" label="备注" width="180"> </el-table-column>
-      <el-table-column label="操作" width="180"> </el-table-column>
+      <el-table-column label="操作" width="180">
+        <template #default="scope">
+          <el-button @click="handlePutApply(scope.row._id, '已通过')" type="success" icon="check" size="small" circle></el-button>
+          <el-button @click="handlePutApply(scope.row._id, '未通过')" type="danger" icon="close" size="small" circle></el-button>
+        </template>
+      </el-table-column>
       <el-table-column prop="state" label="状态" width="180"> </el-table-column>
     </el-table>
     <el-pagination @size-change="handleSizeChange"
@@ -39,6 +44,7 @@
 <script setup lang="ts">
 import {computed, ref} from "vue";
 import { useStore } from '@/store'
+import {ElMessage} from "element-plus";
 
 const store = useStore()
 const searchText = ref('')
@@ -47,8 +53,22 @@ const approverType = ref(approverDefaultType)
 const currentPageSize = ref(5)
 const currentPage = ref(1)
 
+const usersInfos = computed(()=>store.state.users.infos)
 const checkList = computed(()=>store.state.checks.checkList.filter((v) => (v.state === approverType.value || approverDefaultType === approverType.value) && (v.note as string).includes(searchText.value)))
 const checkPageData = computed(()=> checkList.value.slice((currentPage.value-1) * currentPageSize.value, currentPage.value* currentPageSize.value))
+
+const handlePutApply = (_id: string, state: '已通过' | '未通过') => {
+  store.dispatch('checks/putApply',{_id, state}).then((res)=>{
+    if (res.data.errcode === 0) {
+      store.dispatch('checks/getApplyList', {approverid: usersInfos.value._id}).then((res) => {
+        if (res.data.errcode === 0){
+          store.commit('checks/updateCheckList', res.data.rets)
+        }
+      })
+      ElMessage.success('审批成功')
+    }
+  })
+}
 const handleSizeChange = (val: number)=>{
   currentPageSize.value = val
 }
