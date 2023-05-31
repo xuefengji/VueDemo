@@ -124,6 +124,14 @@ const ruleForm = reactive<Apply>({
   time: ['', '']
 })
 
+const validateTime = (rule: unknown, value: [DateModelType, DateModelType], callback: (arg?: Error) => void) => {
+  if (!value[0] && !value[1]) {
+    callback(new Error('请选择审批时间'))
+  } else {
+    callback()
+  }
+}
+
 const rules = reactive<FormRules>({
   approvername: [
     { required: true, message: '请选择审批人', trigger: 'blur' },
@@ -135,7 +143,7 @@ const rules = reactive<FormRules>({
     { required: true, message: '请填写备注', trigger: 'blur'}
   ],
   time: [
-    { required: true, message: '请选择时间', trigger: 'blur'}
+    { validator: validateTime,  trigger: 'blur'}
   ],
 })
 
