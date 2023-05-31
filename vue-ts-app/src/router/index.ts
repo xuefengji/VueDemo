@@ -95,7 +95,23 @@ const routes: Array<RouteRecordRaw> = [
           icon: 'finished',
           auth: true
         },
-        component: () => import('@/views/Check/Check.vue')
+        component: () => import('@/views/Check/Check.vue'),
+        beforeEnter (to, from, next){
+          const usersInfos = (store.state as StateAll).users.infos
+          const checkList = (store.state as StateAll).checks.checkList
+          if (_.isEmpty(checkList)) {
+            store.dispatch('checks/getApplyList', {approverid: usersInfos._id}).then((res) => {
+              if (res.data.errcode === 0){
+                store.commit('checks/updateCheckList', res.data.rets)
+                next()
+              }
+            })
+          }
+          else {
+            next()
+          }
+
+        }
       },
       {
         path: 'apply',
