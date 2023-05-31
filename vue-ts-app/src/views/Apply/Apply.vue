@@ -89,6 +89,7 @@ import moment from "moment";
 const ruleFormRef = ref<FormInstance>()
 interface Apply{
   applicantid: string,
+  applicantname: string,
   approvername: string,
   approverid: string,
   reason: string,
@@ -106,12 +107,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
   formEl.validate((valid) => {
     if (valid) {
       ruleForm.applicantid = userInfos.value._id as string;
-      // ruleForm.approvername = userInfos.value.name as string;
+      ruleForm.applicantname = userInfos.value.name as string;
       ruleForm.approverid = (approvorList.value.find((v)=>v.name=== ruleForm.approvername) as {[index: string]: unknown})._id as string;
       ruleForm.time[0] = moment(ruleForm.time[0]).format('YY-MM-DD hh:mm:ss')
       ruleForm.time[1] = moment(ruleForm.time[1]).format('YY-MM-DD hh:mm:ss')
       store.dispatch('checks/postApply', ruleForm).then((res)=>{
-        if (res.data.errorcode === 0){
+        if (res.data.errcode === 0){
           store.dispatch('checks/getApplyList', {applicantid: userInfos.value._id}).then((res) => {
             if (res.data.errcode === 0){
               store.commit('checks/updateApplyList', res.data.rets)
@@ -134,6 +135,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 const ruleForm = reactive<Apply>({
   applicantid: '',
   approvername: '',
+  applicantname: '',
   approverid: '',
   reason: '',
   note: '',
