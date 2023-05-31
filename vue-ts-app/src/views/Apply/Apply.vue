@@ -70,7 +70,7 @@
         />
       </el-form-item>
       <el-form-item label="备注" prop="note">
-        <el-input v-model="textarea" type="textarea" rows="5"/>
+        <el-input v-model="ruleForm.note" type="textarea" rows="3"/>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -84,10 +84,8 @@
 import {computed, reactive, ref} from 'vue'
 import { useStore } from '@/store'
 import {DateModelType, ElMessage, FormInstance, FormRules} from "element-plus";
-import router from "@/router";
+import moment from "moment";
 
-
-const textarea = ref('')
 const ruleFormRef = ref<FormInstance>()
 interface Apply{
   applicantid: string,
@@ -107,7 +105,25 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      console.log(ruleForm)
+      ruleForm.applicantid = userInfos.value._id as string;
+      // ruleForm.approvername = userInfos.value.name as string;
+      ruleForm.approverid = (approvorList.value.find((v)=>v.name=== ruleForm.approvername) as {[index: string]: unknown})._id as string;
+      ruleForm.time[0] = moment(ruleForm.time[0]).format('YY-MM-DD hh:mm:ss')
+      ruleForm.time[1] = moment(ruleForm.time[1]).format('YY-MM-DD hh:mm:ss')
+      store.dispatch('checks/postApply', ruleForm).then((res)=>{
+        if (res.data.errorcode === 0){
+          store.dispatch('checks/getApplyList', {applicantid: userInfos.value._id}).then((res) => {
+            if (res.data.errcode === 0){
+              store.commit('checks/updateApplyList', res.data.rets)
+            }
+          })
+          ElMessage.success('添加审批成功')
+          resetData(ruleFormRef.value)
+          dialogVisible.value = false
+        } else {
+          ElMessage.error('添加审批失败')
+        }
+      })
     } else {
       console.log('error submit!')
       return false

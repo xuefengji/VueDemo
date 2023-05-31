@@ -21,6 +21,9 @@ const mutations: MutationTree<ChecksState> = {
 const actions: ActionTree<ChecksState, State> = {
     getApplyList (content, payload) {
         return http.get('/checks/apply', payload)
+    },
+    postApply (content, payload) {
+        return http.post('/checks/apply', payload)
     }
 }
 const getters: GetterTree<ChecksState, State> = {}
