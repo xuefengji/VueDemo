@@ -35,21 +35,27 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/Sign/Sign.vue'),
         //进入页面前获取相关考勤信息
-        beforeEnter (to, from, next){
+        async beforeEnter (to, from, next){
           const usersInfos = (store.state as StateAll).users.infos
           const signInfos = (store.state as StateAll).signs.infos
+          const newsInfo = (store.state as StateAll).news.info
           if (_.isEmpty(signInfos)) {
-            store.dispatch('signs/getTime', {userid: usersInfos._id}).then((res) => {
+            const res = await store.dispatch('signs/getTime', {userid: usersInfos._id})
               if (res.data.errcode === 0){
                 store.commit('signs/updateInfos', res.data.infos)
-                next()
+              }else {
+                return;
               }
-            })
           }
-          else {
+          if (_.isEmpty(newsInfo)) {
+            const res = await store.dispatch('news/getRemind', {userid: usersInfos._id})
+            if (res.data.errcode === 0){
+              store.commit('news/updateInfo', res.data.info)
+            }else {
+              return;
+            }
+          }
             next()
-          }
-
         }
       },
       {
@@ -66,6 +72,7 @@ const routes: Array<RouteRecordRaw> = [
           const usersInfos = (store.state as StateAll).users.infos
           const signInfos = (store.state as StateAll).signs.infos
           const applyList = (store.state as StateAll).checks.applyList
+          const newsInfo = (store.state as StateAll).news.info
           if (_.isEmpty(signInfos)) {
             const res = await store.dispatch('signs/getTime', {userid: usersInfos._id})
             if(res.data.errcode === 0) {
@@ -82,6 +89,14 @@ const routes: Array<RouteRecordRaw> = [
               }else {
                 return
               }
+          }
+          if (_.isEmpty(newsInfo)) {
+            const res = await store.dispatch('news/getRemind', {userid: usersInfos._id})
+            if (res.data.errcode === 0){
+              store.commit('news/updateInfo', res.data.info)
+            }else {
+              return;
+            }
           }
           next()
         }

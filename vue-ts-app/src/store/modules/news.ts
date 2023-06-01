@@ -1,13 +1,27 @@
 import type { MutationTree, ActionTree, GetterTree} from "vuex";
 import type { State } from '../index'
+import http from "@/utils/axios";
 
+interface Info {
+    [index: string]: unknown
+}
 export interface NewsState {
-
+    info: Info
 }
 
-const state: NewsState = {}
-const mutations: MutationTree<NewsState> = {}
-const actions: ActionTree<NewsState, State> = {}
+const state: NewsState = {
+    info: {}
+}
+const mutations: MutationTree<NewsState> = {
+    updateInfo(state, payload){
+        state.info = payload
+    }
+}
+const actions: ActionTree<NewsState, State> = {
+    getRemind(content, payload){
+        return http.get('news/remind', payload)
+    }
+}
 const getters: GetterTree<NewsState, State> = {}
 
 export default {
