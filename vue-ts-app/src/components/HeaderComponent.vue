@@ -38,14 +38,14 @@
 import { computed } from "vue";
 import { useStore } from '@/store'
 import {useRouter} from "vue-router";
-import * as path from "path";
+
 
 const router = useRouter()
 const store = useStore();
 const head = computed(() => store.state.users.infos.head)
 const name = computed(() => store.state.users.infos.name)
-const newsInfo = computed(()=>store.state.news.info)
-const isDot = computed(()=>(newsInfo.value.applicant || newsInfo.value.approver) as boolean)
+const newsInfo = computed(() => store.state.news.info)
+const isDot = computed(() => (newsInfo.value.applicant || newsInfo.value.approver) as boolean)
 const handleLogOut = () => {
   store.commit('users/clearToken')
   setTimeout(() => {

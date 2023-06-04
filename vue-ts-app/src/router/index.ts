@@ -55,7 +55,7 @@ const routes: Array<RouteRecordRaw> = [
               return;
             }
           }
-            next()
+          next()
         }
       },
       {
@@ -85,7 +85,6 @@ const routes: Array<RouteRecordRaw> = [
             const res = await store.dispatch('checks/getApplyList', {applicantid: usersInfos._id})
               if (res.data.errcode === 0){
                 store.commit('checks/updateApplyList', res.data.rets)
-                next()
               }else {
                 return
               }
@@ -111,21 +110,27 @@ const routes: Array<RouteRecordRaw> = [
           auth: true
         },
         component: () => import('@/views/Check/Check.vue'),
-        beforeEnter (to, from, next){
+        async beforeEnter (to, from, next){
           const usersInfos = (store.state as StateAll).users.infos
           const checkList = (store.state as StateAll).checks.checkList
+          const newsInfo = (store.state as StateAll).news.info
           if (_.isEmpty(checkList)) {
-            store.dispatch('checks/getApplyList', {approverid: usersInfos._id}).then((res) => {
-              if (res.data.errcode === 0){
-                store.commit('checks/updateCheckList', res.data.rets)
-                next()
-              }
-            })
+            const res = await store.dispatch('checks/getApplyList', {approverid: usersInfos._id})
+            if (res.data.errcode === 0){
+              store.commit('checks/updateCheckList', res.data.rets)
+            } else {
+              return;
+            }
           }
-          else {
-            next()
+          if ( newsInfo.approver ){
+            const res = await store.dispatch('news/putRemind', { userid: usersInfos._id, approver: false})
+            if (res.data.errcode === 0){
+              store.commit('news/updateInfo', res.data.info)
+            }
+          } else {
+            return ;
           }
-
+          next()
         }
       },
       {
@@ -138,21 +143,29 @@ const routes: Array<RouteRecordRaw> = [
           auth: true
         },
         component: () => import('@/views/Apply/Apply.vue'),
-        beforeEnter (to, from, next){
+        async beforeEnter (to, from, next) {
           const usersInfos = (store.state as StateAll).users.infos
           const applyList = (store.state as StateAll).checks.applyList
+          const newsInfo = (store.state as StateAll).news.info
           if (_.isEmpty(applyList)) {
-            store.dispatch('checks/getApplyList', {applicantid: usersInfos._id}).then((res) => {
-              if (res.data.errcode === 0){
-                store.commit('checks/updateApplyList', res.data.rets)
-                next()
-              }
-            })
+            const res = await store.dispatch('checks/getApplyList', {applicantid: usersInfos._id})
+            if (res.data.errcode === 0){
+              store.commit('checks/updateApplyList', res.data.rets)
+            }
+            else {
+              return
+            }
+          }
+          if ( newsInfo.applicant ){
+            const res = await store.dispatch('news/putRemind', { userid: usersInfos._id, applicant: false})
+            if (res.data.errcode === 0){
+              store.commit('news/updateInfo', res.data.info)
+            }
           }
           else {
-            next()
+            return;
           }
-
+          next()
         }
       },
     ]

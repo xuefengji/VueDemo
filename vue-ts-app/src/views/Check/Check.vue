@@ -24,8 +24,8 @@
       <el-table-column prop="note" label="备注" width="180"> </el-table-column>
       <el-table-column label="操作" width="180">
         <template #default="scope">
-          <el-button @click="handlePutApply(scope.row._id, '已通过')" type="success" icon="check" size="small" circle></el-button>
-          <el-button @click="handlePutApply(scope.row._id, '未通过')" type="danger" icon="close" size="small" circle></el-button>
+          <el-button @click="handlePutApply(scope.row._id, '已通过', scope.row.applicantid)" type="success" icon="check" size="small" circle></el-button>
+          <el-button @click="handlePutApply(scope.row._id, '未通过', scope.row.applicantid)" type="danger" icon="close" size="small" circle></el-button>
         </template>
       </el-table-column>
       <el-table-column prop="state" label="状态" width="180"> </el-table-column>
@@ -57,7 +57,7 @@ const usersInfos = computed(()=>store.state.users.infos)
 const checkList = computed(()=>store.state.checks.checkList.filter((v) => (v.state === approverType.value || approverDefaultType === approverType.value) && (v.note as string).includes(searchText.value)))
 const checkPageData = computed(()=> checkList.value.slice((currentPage.value-1) * currentPageSize.value, currentPage.value* currentPageSize.value))
 
-const handlePutApply = (_id: string, state: '已通过' | '未通过') => {
+const handlePutApply = (_id: string, state: '已通过' | '未通过', applicantid: string) => {
   store.dispatch('checks/putApply',{_id, state}).then((res)=>{
     if (res.data.errcode === 0) {
       store.dispatch('checks/getApplyList', {approverid: usersInfos.value._id}).then((res) => {
@@ -65,6 +65,7 @@ const handlePutApply = (_id: string, state: '已通过' | '未通过') => {
           store.commit('checks/updateCheckList', res.data.rets)
         }
       })
+      store.dispatch('news/putRemind', {userid: applicantid, applicant: true})
       ElMessage.success('审批成功')
     }
   })

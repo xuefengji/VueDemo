@@ -20,6 +20,9 @@ const mutations: MutationTree<NewsState> = {
 const actions: ActionTree<NewsState, State> = {
     getRemind(content, payload){
         return http.get('news/remind', payload)
+    },
+    putRemind(content, payload) {
+        return http.put('news/remind', payload)
     }
 }
 const getters: GetterTree<NewsState, State> = {}
