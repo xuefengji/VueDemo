@@ -174,6 +174,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'login',
     component: () => import('@/views/Login/Login.vue')
+  },
+  { path: '/403',
+    name: 'notAuth',
+    component: () => import('@/views/NotAuth/notAuth.vue')
+  },
+  { path: '/404',
+    name: 'notFound',
+    component: () => import('@/views/NotFound/notFound.vue')
+  },
+  { path: '/500',
+    name: 'notServe',
+    component: () => import('@/views/NotServe/notServe.vue')
+  },
+  { path: '/:pathMatch(.*)*',
+    redirect: '/404'
   }
 ]
 
@@ -189,8 +204,15 @@ router.beforeEach((to, from, next) => {
   if(to.meta.auth && _.isEmpty(infos)){
     if (token) {
       store.dispatch('users/infos').then((res) => {
-        store.commit('users/updateInfos', res.data.infos)
-        next()
+        if (res.data.errcode === 0) {
+          store.commit('users/updateInfos', res.data.infos)
+          if (res.data.infos.permission.includes(to.name)) {
+            next()
+          } else {
+            next('/403')
+          }
+        }
+
       })
     } else {
       next('/login')

@@ -4,6 +4,7 @@ import type { AxiosRequestConfig,AxiosResponse } from "axios";
 import store from '@/store'
 import type { StateAll } from "@/store";
 import { ElMessage } from 'element-plus'
+import router from "@/router";
 
 const instance = axios.create({
     baseURL: process.env.NODE_ENV === 'development'? config.baseUrl.dev: config.baseUrl.pro,
@@ -33,6 +34,9 @@ instance.interceptors.response.use(function (response) {
         setTimeout(() => {
             window.location.replace('/login')
         }, 1000)
+    }
+    else if (response.data.errmsg === 'error') {
+        router.push('/500');
     }
     return response;
 }, function (error) {
