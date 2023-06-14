@@ -55,7 +55,7 @@ const routes: Array<RouteRecordRaw> = [
               return;
             }
           }
-          next()
+          next();
         }
       },
       {
@@ -78,7 +78,7 @@ const routes: Array<RouteRecordRaw> = [
             if(res.data.errcode === 0) {
               store.commit('signs/updateInfos', res.data.infos)
             }else{
-              return
+              return;
             }
           }
           if (_.isEmpty(applyList)) {
@@ -86,7 +86,7 @@ const routes: Array<RouteRecordRaw> = [
               if (res.data.errcode === 0){
                 store.commit('checks/updateApplyList', res.data.rets)
               }else {
-                return
+                return;
               }
           }
           if (_.isEmpty(newsInfo)) {
@@ -97,7 +97,7 @@ const routes: Array<RouteRecordRaw> = [
               return;
             }
           }
-          next()
+          next();
         }
       },
       {
@@ -126,11 +126,11 @@ const routes: Array<RouteRecordRaw> = [
             const res = await store.dispatch('news/putRemind', { userid: usersInfos._id, approver: false})
             if (res.data.errcode === 0){
               store.commit('news/updateInfo', res.data.info)
+            } else {
+              return ;
             }
-          } else {
-            return ;
           }
-          next()
+          next();
         }
       },
       {
@@ -153,19 +153,18 @@ const routes: Array<RouteRecordRaw> = [
               store.commit('checks/updateApplyList', res.data.rets)
             }
             else {
-              return
+              return;
             }
           }
           if ( newsInfo.applicant ){
             const res = await store.dispatch('news/putRemind', { userid: usersInfos._id, applicant: false})
             if (res.data.errcode === 0){
               store.commit('news/updateInfo', res.data.info)
+            }else {
+              return ;
             }
           }
-          else {
-            return;
-          }
-          next()
+          next();
         }
       },
     ]
@@ -219,7 +218,7 @@ router.beforeEach((to, from, next) => {
     }
   }else {
     if (token && to.path === '/login') {
-      next('/')
+      next('/sign')
     } else {
       next()
     }
