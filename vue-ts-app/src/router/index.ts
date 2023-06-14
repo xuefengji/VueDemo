@@ -206,7 +206,7 @@ router.beforeEach((to, from, next) => {
         if (res.data.errcode === 0) {
           store.commit('users/updateInfos', res.data.infos)
           if (res.data.infos.permission.includes(to.name)) {
-            next()
+            next('/sign')
           } else {
             next('/403')
           }
@@ -218,7 +218,7 @@ router.beforeEach((to, from, next) => {
     }
   }else {
     if (token && to.path === '/login') {
-      next('/sign')
+      next('/')
     } else {
       next()
     }
